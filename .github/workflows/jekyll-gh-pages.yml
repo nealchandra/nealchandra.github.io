@@ -20,11 +20,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-# run on blog
-defaults:
-  run:
-    working-directory: ./blog
-
 jobs:
   # Build job
   build:
@@ -37,7 +32,7 @@ jobs:
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
+          source: ./blog
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
