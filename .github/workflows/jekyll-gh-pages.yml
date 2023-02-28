@@ -20,12 +20,14 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+# run on blog
+defaults:
+  run:
+    working-directory: ./blog
+
 jobs:
   # Build job
   build:
-    defaults:
-      run:
-        working-directory: ./blog
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
