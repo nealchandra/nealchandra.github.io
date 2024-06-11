@@ -18,6 +18,6 @@ const { entry } = Astro.props as {
     <div class="group-hover:text-skin-accent group-hover:underline">
       {entry.data.title}
     </div>
-    <span class="text-xs pr-2">{new Date(entry.data.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</span>
+    <span class="text-xs pr-2">{new Date(entry.data.date).toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</span>
   </div>
 </a>
