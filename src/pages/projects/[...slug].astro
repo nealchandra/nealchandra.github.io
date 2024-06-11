@@ -9,9 +9,20 @@ import Link from "@components/Link.astro";
 import TableOfContents from "@components/TableOfContents.astro";
 
 export async function getStaticPaths() {
-  const projects = (await getCollection("projects"))
-    .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const projects: CollectionEntry<"projects">[] = (await getCollection("projects"))
+    .filter((project) => !project.data.draft)
+    .sort((a, b) => {
+      const priorityA = a.data.priority ?? -1
+      const priorityB = b.data.priority ?? -1
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+
+      if (a.data.date && b.data.date) {
+        return b.data.date.valueOf() - a.data.date.valueOf();
+      }
+      return 0;
+    });
   return projects.map((project) => ({
     params: { slug: project.slug },
     props: project,
@@ -26,13 +37,15 @@ const { Content, headings } = await project.render();
 <Layout title={project.data.title} description={project.data.description}>
   <Container>
     <div class="animate">
-      <BackToPrevious href="/projects">Back to projects</BackToPrevious>
+      <BackToPrevious href="/">Back to home</BackToPrevious>
     </div>
     <div class="animate my-10 space-y-1">
       <div class="flex items-center gap-1.5">
+        { project.data.date && (
         <div class="font-base text-sm">
           <FormattedDate date={project.data.date} />
         </div>
+        )}
         &bull;
         <div class="font-base text-sm">
           {readingTime(project.body)}
@@ -52,14 +65,14 @@ const { Content, headings } = await project.render();
             {project.data.demoURL && project.data.repoURL && <span>/</span>}
             {project.data.repoURL && (
               <Link href={project.data.repoURL} external>
-                repo
+                View on Github
               </Link>
             )}
           </nav>
         )
       }
     </div>
-    <TableOfContents headings={headings} />
+    {project.data.showToc && <TableOfContents headings={headings} />}
     <article class="animate">
       <Content />
     </article>

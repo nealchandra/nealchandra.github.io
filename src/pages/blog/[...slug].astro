@@ -52,7 +52,7 @@ const { Content, headings } = await post.render();
 <Layout title={post.data.title} description={post.data.description}>
   <Container>
     <div class="animate">
-      <BackToPrevious href="/blog">Back to blog</BackToPrevious>
+      <BackToPrevious href="/">Back to home</BackToPrevious>
     </div>
     <div class="my-10 space-y-1">
       <div class="animate flex items-center gap-1.5">
@@ -68,7 +68,7 @@ const { Content, headings } = await post.render();
         {post.data.title}
       </h1>
     </div>
-    <TableOfContents headings={headings} />
+    {post.data.showToc && <TableOfContents headings={headings} />}
     <article class="animate">
       <Content />
       <div class="mt-24">

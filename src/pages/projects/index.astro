@@ -5,9 +5,20 @@ import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import { PROJECTS } from "@consts";
 
-const projects = (await getCollection("projects"))
-  .filter((project) => !project.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const projects: CollectionEntry<"projects">[] = (await getCollection("projects"))
+    .filter((project) => !project.data.draft)
+    .sort((a, b) => {
+      const priorityA = a.data.priority ?? -1
+      const priorityB = b.data.priority ?? -1
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+
+      if (a.data.date && b.data.date) {
+        return b.data.date.valueOf() - a.data.date.valueOf();
+      }
+      return 0;
+    })
 ---
 
 <Layout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>

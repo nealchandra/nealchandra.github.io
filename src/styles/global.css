@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root,
+  html {
+    --color-fill: 246, 246, 247;
+    --color-text-base: 53, 53, 56;
+    --color-accent: 69, 123, 113;
+    --color-card: 168, 204, 197;
+    --color-card-muted: 143, 188, 143;
+    --color-border: 95, 158, 160;
+  }
+  html.dark {
+    --color-fill: 22, 22, 24;
+    --color-accent: 69, 123, 113;
+    --color-text-base: 234, 237, 243;
+    --color-card: 33, 78, 83;
+    --color-card-muted: 12, 34, 39;
+    --color-border: 48, 88, 88;
+  }
+
+  code,
+  blockquote {
+    word-wrap: break-word;
+  }
+
+  pre > code {
+    white-space: pre;
+  }
+}
+
 html {
   overflow-y: auto;
   color-scheme: light;
@@ -20,13 +49,13 @@ body {
 body {
   @apply font-sans antialiased;
   @apply flex flex-col;
-  @apply bg-neutral-100 dark:bg-neutral-900;
-  @apply text-black/75 dark:text-white/75;
+  @apply bg-skin-fill;
+  @apply text-skin-base;
 }
 
 header {
   @apply fixed left-0 right-0 top-0 z-50 py-6;
-  @apply bg-neutral-100/75 dark:bg-neutral-900/75;
+  @apply bg-skin-fill;
   @apply saturate-200 backdrop-blur-sm;
 }
 
@@ -47,12 +76,15 @@ article {
 @layer utilities {
   article a {
     @apply font-sans text-current underline underline-offset-[3px];
-    @apply decoration-black/30 dark:decoration-white/30;
+    @apply text-skin-accent;
+    @apply decoration-dashed;
     @apply transition-colors duration-300 ease-in-out;
   }
-  article a:hover {
-    @apply text-black dark:text-white;
-    @apply decoration-black/50 dark:decoration-white/50;
+  article a:hover,
+  article a:focus-visible {
+    @apply text-skin-accent;
+    @apply decoration-solid;
+    @apply decoration-skin-accent/100;
   }
 }
 
@@ -79,8 +111,8 @@ pre {
 }
 
 :root {
-  --astro-code-color-text: #09090b;
-  --astro-code-color-background: #fafafa;
+  --astro-code-color-text: rgb(var(--color-text-base));
+  --astro-code-color-background: rgb(var(--color-fill));
   --astro-code-token-comment: #a19595;
   --astro-code-token-keyword: #f47067;
   --astro-code-token-string: #00a99a;
@@ -93,8 +125,8 @@ pre {
 }
 
 .dark {
-  --astro-code-color-text: #fafafa;
-  --astro-code-color-background: #09090b;
+  --astro-code-color-text: rgb(var(--color-text-base));
+  --astro-code-color-background: rgb(var(--color-fill));
   --astro-code-token-comment: #a19595;
   --astro-code-token-keyword: #f47067;
   --astro-code-token-string: #00a99a;
@@ -105,7 +137,6 @@ pre {
   --astro-code-token-punctuation: #8996a3;
   --astro-code-token-link: #8d85ff;
 }
-
 /* copy code button on codeblocks */
 .copy-code {
   @apply absolute right-3 top-3 grid size-9 place-content-center rounded border border-black/15 bg-neutral-100 text-center duration-300 ease-in-out dark:border-white/20 dark:bg-neutral-900;

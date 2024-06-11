@@ -16,10 +16,9 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link
   rel="icon"
-  href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>"
+  href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23000000%22></rect><path fill=%22%23fff%22 d=%22M17.30 69.78L17.30 69.78Q14.48 69.78 14.48 67.47L14.48 67.47L14.48 31.31Q15.63 30.16 17.94 30.16L17.94 30.16Q19.47 30.16 20.56 30.77Q21.65 31.38 22.54 32.98L22.54 32.98L34.77 53.46Q35.54 54.80 36.37 56.30Q37.20 57.81 37.97 59.31Q38.74 60.82 39.41 62.13Q40.08 63.44 40.53 64.34L40.53 64.34L40.78 64.27Q40.27 59.09 40.18 53.84Q40.08 48.59 40.08 43.60L40.08 43.60L40.08 30.67Q40.46 30.54 41.10 30.38Q41.74 30.22 42.51 30.22L42.51 30.22Q45.33 30.22 45.33 32.53L45.33 32.53L45.33 68.75Q44.75 69.26 43.86 69.55Q42.96 69.84 41.87 69.84L41.87 69.84Q40.34 69.84 39.25 69.23Q38.16 68.62 37.26 67.02L37.26 67.02L25.10 46.54Q24.34 45.26 23.47 43.73Q22.61 42.19 21.81 40.72Q21.01 39.25 20.34 37.90Q19.66 36.56 19.22 35.66L19.22 35.66L18.96 35.73Q19.28 38.80 19.47 42.74Q19.66 46.67 19.66 50.19L19.66 50.19L19.66 69.33Q19.34 69.46 18.67 69.62Q18 69.78 17.30 69.78ZM85.14 34.83L85.14 34.83Q85.14 35.73 84.59 36.37Q84.05 37.01 83.34 37.33L83.34 37.33Q81.68 36.18 79.44 35.15Q77.20 34.13 73.62 34.13L73.62 34.13Q70.67 34.13 68.18 35.15Q65.68 36.18 63.82 38.16Q61.97 40.14 60.91 43.15Q59.86 46.16 59.86 50.06L59.86 50.06Q59.86 54.03 60.88 56.98Q61.90 59.92 63.73 61.90Q65.55 63.89 68.11 64.88Q70.67 65.87 73.81 65.87L73.81 65.87Q77.14 65.87 79.60 64.94Q82.06 64.02 83.73 62.74L83.73 62.74Q84.37 62.99 84.94 63.66Q85.52 64.34 85.52 65.23L85.52 65.23Q85.52 66.58 83.98 67.66L83.98 67.66Q82.51 68.69 79.95 69.49Q77.39 70.29 73.42 70.29L73.42 70.29Q69.39 70.29 65.94 69.01Q62.48 67.73 59.95 65.20Q57.42 62.67 55.95 58.90Q54.48 55.12 54.48 50.06L54.48 50.06Q54.48 45.01 55.98 41.20Q57.49 37.39 60.05 34.83Q62.61 32.27 66.03 30.99Q69.46 29.71 73.23 29.71L73.23 29.71Q75.86 29.71 78.06 30.16Q80.27 30.61 81.84 31.34Q83.41 32.08 84.27 33.01Q85.14 33.94 85.14 34.83Z%22></path></svg>"
 />
 <meta name="generator" content={Astro.generator} />
 
@@ -72,9 +71,7 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
     preloadTheme();
     onScroll();
     animate();
-    updateThemeButtons();
     addCopyCodeButtons();
-    setGiscusTheme();
 
     const backToTop = document.getElementById("back-to-top");
     backToTop?.addEventListener("click", (event) => scrollToTop(event));
@@ -82,27 +79,44 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
     const backToPrev = document.getElementById("back-to-prev");
     backToPrev?.addEventListener("click", () => window.history.back());
 
-    const lightThemeButton = document.getElementById("light-theme-button");
-    lightThemeButton?.addEventListener("click", () => {
-      localStorage.setItem("theme", "light");
-      toggleTheme(false);
-      updateThemeButtons();
+    const themeLabel = document.getElementById("theme-label");
+    const toggleThemeButton = document.getElementById("toggle-theme-button");
+
+    const updateThemeLabel = (theme) => {
+      if (theme === "light") {
+        themeLabel.textContent = "Light";
+      } else if (theme === "dark") {
+        themeLabel.textContent = "Dark";
+      } else {
+        themeLabel.textContent = "System";
+      }
+    };
+
+    toggleThemeButton?.addEventListener("click", () => {
+      const theme = localStorage.getItem("theme");
+
+      if (theme === "light") {
+        localStorage.setItem("theme", "dark");
+        toggleTheme(true);
+        updateThemeLabel("dark");
+      } else if (theme === "dark") {
+        localStorage.setItem("theme", "system");
+        toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+        updateThemeLabel("system");
+      } else {
+        localStorage.setItem("theme", "light");
+        toggleTheme(false);
+        updateThemeLabel("light");
+      }
     });
 
-    const darkThemeButton = document.getElementById("dark-theme-button");
-    darkThemeButton?.addEventListener("click", () => {
-      localStorage.setItem("theme", "dark");
-      toggleTheme(true);
-      updateThemeButtons();
+    toggleThemeButton?.addEventListener("mouseover", () => {
+      themeLabel.classList.remove("hidden");
     });
 
-    const systemThemeButton = document.getElementById("system-theme-button");
-    systemThemeButton?.addEventListener("click", () => {
-      localStorage.setItem("theme", "system");
-      toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-      updateThemeButtons();
+    toggleThemeButton?.addEventListener("mouseout", () => {
+      themeLabel.classList.add("hidden");
     });
-
     window
       .matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", (event) => {
@@ -112,35 +126,8 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
       });
 
     document.addEventListener("scroll", onScroll);
-  }
 
-  function updateThemeButtons() {
-    const theme = localStorage.getItem("theme");
-    const lightThemeButton = document.getElementById("light-theme-button");
-    const darkThemeButton = document.getElementById("dark-theme-button");
-    const systemThemeButton = document.getElementById("system-theme-button");
-
-    function removeActiveButtonTheme(button) {
-      button?.classList.remove("bg-black/5");
-      button?.classList.remove("dark:bg-white/5");
-    }
-
-    function addActiveButtonTheme(button) {
-      button?.classList.add("bg-black/5");
-      button?.classList.add("dark:bg-white/5");
-    }
-
-    removeActiveButtonTheme(lightThemeButton);
-    removeActiveButtonTheme(darkThemeButton);
-    removeActiveButtonTheme(systemThemeButton);
-
-    if (theme === "light") {
-      addActiveButtonTheme(lightThemeButton);
-    } else if (theme === "dark") {
-      addActiveButtonTheme(darkThemeButton);
-    } else {
-      addActiveButtonTheme(systemThemeButton);
-    }
+    setGiscusTheme();
   }
 
   function animate() {
@@ -253,7 +240,7 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
 
     if (giscus) {
       const url = new URL(giscus.src);
-      url.searchParams.set("theme", isDark ? "dark" : "light");
+      url.searchParams.set("theme", isDark ? "noborder_dark" : "noborder_light");
       giscus.src = url.toString();
     }
   };

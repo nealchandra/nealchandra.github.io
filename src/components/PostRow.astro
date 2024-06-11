@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  entry: CollectionEntry<"blog">
+};
+
+const { entry } = Astro.props as {
+  entry: CollectionEntry<"blog">
+};
+---
+
+<a
+  href={`/${entry.collection}/${entry.slug}`}
+  class="not-prose group relative flex flex-nowrap rounded-lg border-skin-accent/30 transition-colors duration-300 ease-in-out text-black/80 dark:text-white/80"
+>
+  <div class="flex flex-1 flex-row items-center justify-between truncate group text-black/80 dark:text-white/80">
+    <div class="group-hover:text-skin-accent group-hover:underline">
+      {entry.data.title}
+    </div>
+    <span class="text-xs pr-2">{new Date(entry.data.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</span>
+  </div>
+</a>

@@ -1,0 +1,26 @@
+---
+title: "Remix AI"
+description: "The best background replacement tool on the web"
+priority: 1
+---
+
+import Slider from "@components/RemixSlider.tsx";
+
+Background Remix AI (temporary title, product URL coming soon) is a web tool for performing AI background replacement.
+
+Existing tools simply strip the original background and paste it on top of the foreground. Unfortunately, this usually results in a poor quality result as the lighting conditions and other scene details are not reflected in the original content.
+
+Background Remix uses the full power of modern generative-AI to update the original foreground content to accurately reflect the change in background, while still preserving crucial details from the original image.
+
+## Examples
+
+<div className="gap-4">
+  <figure className="flex flex-col items-center">
+    <Slider comparison={1} client:load />
+    <figcaption>Prompt: Beach at sunset</figcaption>
+  </figure>
+  <figure className="flex flex-col items-center">
+    <Slider comparison={2} client:load />
+    <figcaption>Prompt: On the surface of Mars</figcaption>
+  </figure>
+</div>
