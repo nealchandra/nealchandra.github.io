@@ -126,7 +126,6 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
       });
 
     document.addEventListener("scroll", onScroll);
-
     setGiscusTheme();
   }
 
@@ -180,9 +179,11 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
       document.documentElement.classList.remove("dark");
     }
 
+    const giscusTheme = window.giscusTheme = dark ? "noborder_dark" : "noborder_light";
+    window.dispatchEvent(new CustomEvent('giscus:theme', { detail: { theme: giscusTheme } }));
     window.getComputedStyle(css).opacity;
     document.head.removeChild(css);
-
+    
     setGiscusTheme();
   }
 
